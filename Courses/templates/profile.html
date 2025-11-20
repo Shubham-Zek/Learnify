@@ -1,0 +1,46 @@
+{% extends "home.html" %}
+{% block main %}
+    <h1 class="text-3xl font-bold text-center">Profile</h1>
+    <div class="w-1/2 my-10 mx-auto text-start">
+        {% if is_staff %}
+            <h1 class="text-3xl font-semibold">Name: {{ profile }}</h1>
+            <h1 class="text-3xl font-semibold">Email: {{ profile.email }}</h1>
+            <h1 class="text-3xl font-semibold">Courses:</h1>
+            <ul>
+                {% for course in profile.courses.all %}
+                    <li class="text-xl py-1 font-semibold ms-8">{{ course }}</li>
+                {% empty %}
+                    No Courses yet
+                {% endfor %}
+                <h1 class="text-3xl font-semibold">Students:</h1>
+            </ul>
+            <ul>
+                {% for course in profile.courses.all %}
+                    {% for student in course.students.all %}
+                        <li class="text-xl py-1 font-semibold ms-8">{{ student }}</li>
+                    {% empty %}
+                        No Students yet
+                    {% endfor %}
+                {% empty %}
+                    No Students yet
+                {% endfor %}
+            </ul>
+            <div class="flex justify-center">
+                <button hx-get="{% url "editInstructor" profile.pk %}"
+                        class="cursor-pointer rounded-full px-6 py-2 mx-auto bg-white/50 text-black hover:bg-white/75">
+                    Edit
+                </button>
+            </div>
+        {% else %}
+            <h2 class="text-2xl font-semibold">Name: {{ profile }}</h2>
+            <h2 class="text-2xl font-semibold">Bio: {{ profile.bio }}</h2>
+            <h2 class="text-2xl font-semibold">Age: {{ profile.age }}</h2>
+            <ul class="w-1/3 ms-3">
+                {% for course in profile.courses.all %}
+                    <li class="px-3 py-1">{{ course }}</li>
+                {% empty %} No courses taken yet
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+{% endblock main %}

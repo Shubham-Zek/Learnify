@@ -1,0 +1,30 @@
+{% extends "home.html" %}
+{% load widget_tweaks %}
+{% block main %}
+    <div class="w-full flex flex-col items-center mt-10">
+        <div class="w-1/4 border rounded-lg p-5">
+            <h1 class="text-3xl font-extrabold text-center">Login</h1>
+            <form hx-post="">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+                        <div>
+                            {% render_field field class+="border rounded w-full outline-none px-1 focus:border-blue-400" rows="3" autofocus="true" %}
+                        </div>
+                        {% for error in field.errors %}<p class="text-red-500/75 text-sm">{{ error }}</p>{% endfor %}
+                    </div>
+                {% endfor %}
+                {% for i in messages %}<p class="text-red-500/75 text-sm">{{ i }}</p>{% endfor %}
+                <input type="hidden" name="next" id="next" value="{{ next }}">
+                <div class="flex justify-center gap-3 mt-3">
+                    <button class="cursor-pointer rounded-full px-2 py-1 bg-neutral-300 text-black hover:bg-black hover:text-white">
+                        Submit
+                    </button>
+                    <button type="button"
+                            class="cursor-pointer rounded-full px-2 py-1 bg-neutral-300 text-black hover:bg-black hover:text-white"
+                            onclick="javascript:history.back()">Cancel</button>
+                </div>
+            </form>
+        </div>
+    {% endblock main %}

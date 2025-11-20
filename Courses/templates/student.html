@@ -1,0 +1,58 @@
+{% extends "home.html" %}
+{% block main %}
+    {% if user.is_staff %}
+        <div class="text-center">
+            <button class="cursor-pointer rounded-full px-3 py-2 bg-white/50 text-black hover:bg-white/75"
+                    hx-get="{% url 'addStudent' %}">Add Student</button>
+        </div>
+    {% endif %}
+    <div class="flex justify-evenly mt-5">
+        <div class="w-1/8">
+            <h2 class="text-red-600/70 text-3xl font-bold">Student list</h2>
+            <ul class="text-xl font-semibold">
+                {% for student in students %}
+                    <li role="button"
+                        class="my-1 px-3 py-1 rounded-full {% if detail.pk == student.pk %}bg-white text-black{% endif %} hover:cursor-pointer hover:bg-white/75 hover:text-black"
+                        {% if detail.pk == student.pk %}hx-get="{% url "students" %}"{% else %} hx-get="{% url "students" %}?pk={{ student.pk }}"{% endif %}
+                        hx-push-url="false">{{ student.name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="w-1/2">
+            {% if detail %}
+                <h2 class="text-red-600/70 text-2xl font-bold">Profile</h2>
+                <ul class="text-xl font-semibold">
+                    <li class="px-3 py-1">Name: {{ detail.name }}</li>
+                    <hr>
+                    <li class="px-3 py-1">Email: {{ detail.email }}</li>
+                    <hr>
+                    <li class="px-3 py-1">Bio: {{ detail.profile.bio }}</li>
+                    <hr>
+                    <li class="px-3 py-1">Age: {{ detail.profile.age }}</li>
+                    <hr>
+                    <li class="px-3 py-1">
+                        Courses:
+                        <ul class="w-1/3 ms-3">
+                            {% for course in detail.courses.all %}
+                                <li class="px-3 py-1 rounded-full hover:cursor-pointer hover:bg-white/75 hover:text-black"
+                                    hx-get="{% url "courses" %}?pk={{ course.pk }}">{{ course }}</li>
+                            {% empty %} No courses taken yet
+                            {% endfor %}
+                        </ul>
+                    </li>
+                    <hr>
+                </ul>
+                {% if user.is_staff %}
+                    <div class="flex gap-3 mt-3 ms-5">
+                        <button class="cursor-pointer rounded-full px-3 py-2 bg-white/50 text-black hover:bg-white/75"
+                                hx-get="{% url "editStudent" detail.pk %}">Update</button>
+                        <button hx-get="{% url "deleteStudent" detail.pk %}"
+                                class="cursor-pointer rounded-full px-3 py-2 bg-black/25 text-white hover:bg-black">
+                            Delete
+                        </button>
+                    </div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
+{% endblock main %}
